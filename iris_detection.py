@@ -1,6 +1,9 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+from matplotlib import pyplot as plt
+
+from matrixHandler import calcular_centroide, atualizar_grafico, configurar_grafico
 
 # Inicializa o módulo de Face Mesh do MediaPipe
 mp_face_mesh = mp.solutions.face_mesh
@@ -12,11 +15,14 @@ left_iris_indices = [469, 470, 471, 472]  # Contorno da íris do olho esquerdo
 
 
 # Índices de landmarks para o contorno do olho e íris do olho direito no MediaPipe
-right_eye_indices = [263, 362, 387, 373, 380, 385]  # Contorno do olho direito
+right_eye_indices = [263, 362, 387, 373, 380, 385 ]  # Contorno do olho direito
 right_iris_indices = [474, 475, 476, 477]  # Contorno da íris do olho esquerdo
 
+# Configura o gráfico interativo
+fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
+
 # Carrega o vídeo
-cap = cv2.VideoCapture("video.mp4")
+cap = cv2.VideoCapture("video4.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")
@@ -24,49 +30,45 @@ if not cap.isOpened():
 
 def get_cropped_eye(frame, eye_indices, iris_indices):
     """Recorta e retorna a região do olho e da íris em um frame."""
-    # Cria uma máscara binária do tamanho do frame original
-    mask = np.zeros_like(frame)
-
-    # Redimensiona o frame para facilitar o processamento
-    scale_factor = 0.5
+    # Redimensiona o frame para processamento mais rápido
+    scale_factor = 0.9
     small_frame = cv2.resize(frame, None, fx=scale_factor, fy=scale_factor)
     rgb_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
+    mask = np.zeros_like(frame)
 
-    # Processa o frame com o MediaPipe Face Mesh
+    # Processa o frame redimensionado com MediaPipe Face Mesh
     results = face_mesh.process(rgb_frame)
 
     if results.multi_face_landmarks:
         for face_landmarks in results.multi_face_landmarks:
-            # Coleta as coordenadas dos pontos ao redor do olho
             eye_coordinates = []
             for idx in eye_indices:
-                x = int(face_landmarks.landmark[idx].x * frame.shape[1])
-                y = int(face_landmarks.landmark[idx].y * frame.shape[0])
+                x = int(face_landmarks.landmark[idx].x * small_frame.shape[1] / scale_factor)
+                y = int(face_landmarks.landmark[idx].y * small_frame.shape[0] / scale_factor)
                 eye_coordinates.append((x, y))
 
-            # Coleta as coordenadas dos pontos ao redor da íris
             iris_coordinates = []
             for idx in iris_indices:
-                x = int(face_landmarks.landmark[idx].x * frame.shape[1])
-                y = int(face_landmarks.landmark[idx].y * frame.shape[0])
+                x = int(face_landmarks.landmark[idx].x * small_frame.shape[1] / scale_factor)
+                y = int(face_landmarks.landmark[idx].y * small_frame.shape[0] / scale_factor)
                 iris_coordinates.append((x, y))
 
-            # Desenha o polígono para o contorno do olho na máscara
+            centroid = calcular_centroide(iris_coordinates)
             cv2.fillPoly(mask, [np.array(eye_coordinates)], (255, 255, 255))
 
-            # Desenha pequenos círculos na máscara para os pontos da íris
             for (x, y) in iris_coordinates:
                 cv2.circle(mask, (x, y), 2, (255, 255, 255), -1)
+                cv2.circle(mask, calcular_centroide(iris_coordinates), 2, (0, 0, 255), 5)
 
-            # Aplica a máscara ao frame original para extrair apenas a área dentro do polígono
             cropped_eye = cv2.bitwise_and(frame, mask)
+            print(eye_coordinates)
+            print(iris_coordinates)
+            return cropped_eye, eye_coordinates, iris_coordinates, centroid
 
-            return cropped_eye  # Retorna a área recortada do olho
-
-    return None  # Retorna None se não encontrar landmarks
+    return None
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("video.mp4")
+cap = cv2.VideoCapture("video6.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")
@@ -78,19 +80,25 @@ while cap.isOpened():
         break
 
     # Obtém a área recortada do olho direito e da íris
-    cropped_eye = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
+    cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
+    # Obtém a área recortada do olho direito e da íris
+    #cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
+
     #cropped_eye = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
     if cropped_eye is not None:
         # Exibe apenas a área recortada do olho direito e íris
         cv2.imshow("Cropped Right Eye and Iris Region", cropped_eye)
-
+        # Atualiza o gráfico com os dados atuais
+        atualizar_grafico(eye_plot, iris_plot, centroid_plot, eye_coords, iris_coords, iris_centroid)
     # Exibe o frame original
     cv2.imshow("Original Video Frame", frame)
 
-    # Aguarda até que uma tecla seja pressionada e fecha as janelas
+    # Aguarda até que uma tecla seja pressionada e  fecha as janelas
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 # Libera o vídeo e fecha as janelas
 cap.release()
 cv2.destroyAllWindows()
+plt.ioff()
+plt.show()

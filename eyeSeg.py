@@ -7,7 +7,7 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, refine_landmarks=True)
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("video.mp4")
+cap = cv2.VideoCapture("video1.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")

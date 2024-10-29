@@ -5,8 +5,8 @@ import time
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
-# Substitua 'video.mp4' pelo caminho do seu vídeo
-video_path = 'video.mp4'
+# Substitua 'video1.mp4' pelo caminho do seu vídeo
+video_path = 'video1.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Reduz a resolução do vídeo para metade da original
