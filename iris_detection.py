@@ -80,9 +80,9 @@ while cap.isOpened():
         break
 
     # Obtém a área recortada do olho direito e da íris
-    cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
+    #cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
     # Obtém a área recortada do olho direito e da íris
-    #cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
+    cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
 
     #cropped_eye = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
     if cropped_eye is not None:
