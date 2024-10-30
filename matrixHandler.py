@@ -69,7 +69,7 @@ def atualizar_grafico(eye_plot, iris_plot, centroid_plot, eye_coords, iris_coord
     centroid_plot.set_data([iris_centroid[0]], [iris_centroid[1]])
 
     plt.draw()
-    plt.pause(2)  # Pausa para simular vídeo em tempo real
+    plt.pause(200)  # Pausa para simular vídeo em tempo real
 
 
 def calcular_porcentagem_contribuicao(distancias, indices):
@@ -103,7 +103,7 @@ def calcular_porcentagem_contribuicao(distancias, indices):
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 p1 = calcular_centroide(p)
-
+p1 = (170,378)
 # Calcula as distâncias entre p2 e o centróide p1
 distancias = calcular_distancias(p2, p1)
 print(distancias)
@@ -129,4 +129,6 @@ print("Porcentagem de contribuição de p0 e p3:", p0)
 #p3 vertical abaixo
 
 
-#se distancia ente p1 e p4 se sobressair mais de 50% entre os pontosestá no centro
+#se distancia ente p1 e p4 concentrada for mais de 50% entre os pontos está no centro
+#se a distancia de p1 e p4 != 50% então começamos a verificação, se ele está tendendo pra direita ou pra esquerda
+#
