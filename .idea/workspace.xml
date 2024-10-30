@@ -15,8 +15,6 @@
       <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/JL-EyeTeractive.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/JL-EyeTeractive.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/matrixHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/matrixHandler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../database/databaseManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/../database/databaseManager.py" afterDir="false" />

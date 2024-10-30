@@ -100,17 +100,127 @@ def calcular_porcentagem_contribuicao(distancias, indices):
 
     return porcentagem_contribuicao
 
+def calcular_porcentagem_contribuicao_3(distancias, indice1, indice2, indice3):
+    """
+    Calcula a porcentagem de contribuição de três pontos específicos para a soma total das distâncias.
+
+    Parâmetros:
+    - distancias (list): Lista de distâncias.
+    - indice1, indice2, indice3 (int): Índices dos pontos cuja contribuição será calculada.
+
+    Retorna:
+    - float: Porcentagem de contribuição dos três pontos especificados.
+    """
+    # Verifica se todos os elementos em distancias são numéricos
+    if not all(isinstance(x, (int, float)) for x in distancias):
+        raise TypeError("Todos os elementos em 'distancias' devem ser inteiros ou floats.")
+
+    # Verifica se os índices são válidos e dentro do limite da lista
+    indices = [indice1, indice2, indice3]
+    for i in indices:
+        if not isinstance(i, int) or i >= len(distancias):
+            raise IndexError("Índice fora do alcance da lista 'distancias'.")
+
+    # Soma das distâncias dos pontos especificados pelos três índices
+    soma_selecionada = sum(distancias[i] for i in indices)
+
+    # Soma total das distâncias
+    soma_total = sum(distancias)
+
+    # Cálculo da porcentagem de contribuição
+    if soma_total == 0:
+        raise ValueError("A soma total das distâncias não pode ser zero para calcular a porcentagem.")
+    porcentagem_contribuicao = (soma_selecionada / soma_total) * 100
+
+    return porcentagem_contribuicao
+
+
+def calcular_contribuicao_indices(distancias):
+    """
+    Calcula a contribuição percentual dos índices 0 e 4 em relação à soma total das distâncias.
+
+    Parâmetros:
+    - distancias (list): Lista de distâncias entre pontos.
+
+    Retorna:
+    - dict: Um dicionário com as contribuições percentuais dos índices 0 e 4.
+    """
+    # Verifica se há pelo menos cinco elementos na lista
+    if len(distancias) < 5:
+        raise IndexError("A lista 'distancias' precisa ter pelo menos cinco elementos.")
+
+    # Verifica se todos os elementos são numéricos
+    if not all(isinstance(x, (int, float)) for x in distancias):
+        raise TypeError("Todos os elementos em 'distancias' devem ser inteiros ou floats.")
+
+    # Soma total das distâncias
+    soma_total = sum(distancias)
+    if soma_total == 0:
+        raise ValueError("A soma total das distâncias não pode ser zero para calcular a porcentagem.")
+
+    # Calcula as contribuições percentuais para os índices 0 e 4
+    contribuicao_0 = (distancias[0] / soma_total) * 100
+    contribuicao_4 = (distancias[4] / soma_total) * 100
+    #indice 0,4
+    return contribuicao_0,contribuicao_4
+
+
+def calcular_direcao(distancias):
+    # Grau de Esquerda~Direita
+    esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
+    direita = calcular_porcentagem_contribuicao_3(distancias, 2, 4, 3)
+    direcao_horizontal = "centro" if abs(esquerda - direita) < 5 else ("esquerda" if esquerda < direita else "direita")
+
+    # Limpa os medidores horizontais e calcula a direção vertical
+    distancias_verticais = distancias.copy()
+    distancias_verticais.pop(0)
+    distancias_verticais.pop(2)
+    cima = calcular_porcentagem_contribuicao(distancias_verticais, [3, 2])
+    baixo = calcular_porcentagem_contribuicao(distancias_verticais, [1, 2])
+    direcao_vertical = "centro" if abs(cima - baixo) < 5 else ("cima" if cima < baixo else "baixo")
+
+    return {
+        "direcao_horizontal": direcao_horizontal,
+        "direcao_vertical": direcao_vertical,
+        "contribuicao_horizontal": {"esquerda": esquerda, "direita": direita},
+        "contribuicao_vertical": {"cima": cima, "baixo": baixo}
+    }
+
+
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
-p1 = calcular_centroide(p)
-p1 = (170,378)
+#p1 = calcular_centroide(p)
+p1 = (190,380)
 # Calcula as distâncias entre p2 e o centróide p1
 distancias = calcular_distancias(p2, p1)
 print(distancias)
 
-# Calcula a porcentagem de contribuição para as distâncias, considerando os índices [0, 3]
+# Calcula a porcentagem de contribuição para descobrir se ele está no meio
+#se distancia ente p1 e p4 concentrada for mais de 50% entre os pontos está no centro
 p0 = calcular_porcentagem_contribuicao(distancias, [0, 3])
-print(p0)
+#print(p0)
+#print("percentaul de diferença:", calcular_contribuicao_indices(distancias))
+#se for mais de 50% ele não tenta nem descobrir se ta indo pra direita ou esquerda e sim vai
+#descobrir se estamos indo pra baixo ou pra cima.
+
+#Calculando Porcentagem pra descobrir grau de Esquerda~Direita
+#Quanto menor o numero maior o grau de certeza ele é pra um lado.
+#print("esquerda",calcular_porcentagem_contribuicao_3(distancias,0,1,5))
+#print("direita",calcular_porcentagem_contribuicao_3(distancias,2,4,3))
+#se a diferença for menos que 5% está no centro
+
+#distancias2 = distancias.copy()
+#-----------------------------------------------------------------------------------#-
+#precisamos limpar os medidores de distancia horizontal para ter um calculo mais limpo sobre a distancia vertical.
+#print(distancias)
+#distancias.pop(0)
+#distancias.pop(2)
+#print(distancias)
+#Calculando Porcentagem pra descobrir grau de Cima~Baixo
+#print(calcular_porcentagem_contribuicao(distancias, [3, 2]))
+#print(calcular_porcentagem_contribuicao(distancias, [1, 2]))
+#Se a diferença entre ambos for mais que 5% está no centro.
+
 
 # Configura o gráfico e atualiza com os dados necessários
 fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
@@ -118,6 +228,8 @@ atualizar_grafico(eye_plot, iris_plot, centroid_plot, p2, p, p1)
 
 # Finalmente, imprime ou utiliza o valor calculado p0 conforme necessário
 print("Porcentagem de contribuição de p0 e p3:", p0)
+
+print(calcular_direcao(distancias))
 
 #p1, p2, p6 direita
 #p1 horizontal
