@@ -260,9 +260,9 @@ def calcular_graus(distancias):
     return grau_horizontal,grau_vertical
 
 
-def calcular_direcao_paraconsistente(distancias):
+def calcular_direcao_consistente(distancias):
     """
-    Calcula a direção horizontal e vertical com base na lógica paraconsistente.
+    Calcula a direção horizontal e vertical.
 
     Parâmetros:
     - distancias (list): Lista de distâncias entre pontos.
@@ -282,8 +282,9 @@ def calcular_direcao_paraconsistente(distancias):
         direcao_horizontal = "esquerda"
 
     #Como o olho vai se comprimindo ao chegar nas bordas é necessaro fazer esse verificação
+    #o neutro na função vertical é ajustado por esta função
     valor_ajustado = calcular_valor_ajustado(grau_horizontal)
-    #abs(valor_ajustado)
+    abs(valor_ajustado)
     # Determina a direção vertical
     if -valor_ajustado <= grau_vertical <= valor_ajustado:
         direcao_vertical = "meio"
@@ -303,6 +304,59 @@ def calcular_direcao_paraconsistente(distancias):
         direcao_final = f"{direcao_vertical}-{direcao_horizontal}"
 
     return direcao_final
+
+def calcular_direcao_paraconsistente(grau_horizontal, grau_vertical):
+    """
+    Calcula a direção horizontal e vertical usando uma lógica paraconsistente.
+
+    Parâmetros:
+    - grau_horizontal (float): Grau de direção horizontal.
+    - grau_vertical (float): Grau de direção vertical.
+
+    Retorna:
+    - str: Direção paraconsistente baseada nas intensidades e zonas de tolerância.
+    """
+
+    # Define as zonas de intensidade para horizontal
+    if -8 <= grau_horizontal <= 8:
+        direcao_horizontal = "meio"
+    elif grau_horizontal > 25:
+        direcao_horizontal = "direita-intensa"
+    elif grau_horizontal > 8:
+        direcao_horizontal = "direita-leve"
+    elif grau_horizontal < -25:
+        direcao_horizontal = "esquerda-intensa"
+    else:
+        direcao_horizontal = "esquerda-leve"
+
+    valor_ajustado = calcular_valor_ajustado(grau_horizontal)
+    abs(valor_ajustado)
+
+    # Define as zonas de intensidade para vertical
+    if -valor_ajustado <= grau_vertical <= valor_ajustado:
+        direcao_vertical = "meio"
+    elif grau_vertical > 7.5:
+        direcao_vertical = "cima-intensa"
+    elif grau_vertical > 6.5:
+        direcao_vertical = "cima-leve"
+    elif grau_vertical < -7.5:
+        direcao_vertical = "baixo-intensa"
+    else:
+        direcao_vertical = "baixo-leve"
+
+    # Lógica paraconsistente para determinar a direção final
+    if direcao_horizontal == "meio" and direcao_vertical == "meio":
+        direcao_final = "centro"
+    elif direcao_horizontal == "meio":
+        direcao_final = direcao_vertical
+    elif direcao_vertical == "meio":
+        direcao_final = direcao_horizontal
+    else:
+        # Ambos os valores têm uma direção (não "meio")
+        direcao_final = f"{direcao_vertical}-{direcao_horizontal}"
+
+    return direcao_final
+
 
 
 def calcular_valor_ajustado(valor):
@@ -332,11 +386,18 @@ def calcular_valor_ajustado(valor):
 
 
 
+#horizontal vai de -50 a 50
+#vertical vai de -10 a 10
+
+
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (193,384)
+p1 = (201,380)
 distancias = calcular_distancias(p2, p1)
-#print(calcular_direcao_paraconsistente(distancias))
+print(calcular_direcao_consistente(distancias))
+grau_horizontal, grau_vertical = calcular_graus(distancias)
+print(calcular_direcao_paraconsistente(grau_horizontal, grau_vertical))
+
 #cima = calcular_porcentagem_contribuicao(distancias, [5, 4])
 #baixo = calcular_porcentagem_contribuicao(distancias, [1, 2])
 #print(cima,baixo)
