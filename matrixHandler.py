@@ -165,6 +165,37 @@ def calcular_contribuicao_indices(distancias):
     return contribuicao_0,contribuicao_4
 
 
+def calcular_contribuicao_indices(distancias, indice1, indice2):
+    """
+    Calcula a contribuição percentual de dois pontos específicos em relação à soma total das distâncias.
+
+    Parâmetros:
+    - distancias (list): Lista de distâncias.
+    - indice1, indice2 (int): Índices dos pontos cuja contribuição será calculada.
+
+    Retorna:
+    - dict: Dicionário com as contribuições percentuais dos índices especificados.
+    """
+    # Verifica se os índices estão dentro do alcance da lista
+    for i in [indice1, indice2]:
+        if i >= len(distancias):
+            raise IndexError(f"Índice {i} fora do alcance da lista 'distancias' com comprimento {len(distancias)}.")
+
+    # Soma total das distâncias
+    soma_total = sum(distancias)
+    if soma_total == 0:
+        raise ValueError("A soma total das distâncias não pode ser zero para calcular a porcentagem.")
+
+    # Calcula as contribuições percentuais para os índices especificados
+    contribuicao_indice1 = (distancias[indice1] / soma_total) * 100
+    contribuicao_indice2 = (distancias[indice2] / soma_total) * 100
+
+    return {
+        f"contribuicao_indice_{indice1}": contribuicao_indice1,
+        f"contribuicao_indice_{indice2}": contribuicao_indice2
+    }
+
+
 def calcular_direcao(distancias):
     # Grau de Esquerda~Direita
     esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
@@ -190,7 +221,7 @@ def calcular_direcao(distancias):
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (190,380)
+p1 = (190,378)
 # Calcula as distâncias entre p2 e o centróide p1
 distancias = calcular_distancias(p2, p1)
 print(distancias)
@@ -220,6 +251,64 @@ p0 = calcular_porcentagem_contribuicao(distancias, [0, 3])
 #print(calcular_porcentagem_contribuicao(distancias, [3, 2]))
 #print(calcular_porcentagem_contribuicao(distancias, [1, 2]))
 #Se a diferença entre ambos for mais que 5% está no centro.
+
+esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
+direita = calcular_porcentagem_contribuicao_3(distancias, 2, 4, 3)
+# Limpa os medidores horizontais e calcula a direção vertical
+distancias_verticais = distancias.copy()
+distancias_verticais.pop(0)
+distancias_verticais.pop(2)
+print(distancias_verticais)
+distancias_verticais_direita = distancias_verticais.copy()
+#distancias_verticais_esquerda = distancias_verticais.copy()
+#distancias_verticais_esquerda.pop(1)
+#distancias_verticais_esquerda.pop(1)
+#print(distancias_verticais_esquerda)#P2,P6 (BAIXO,CIMA)
+distancias_verticais_direita.pop(0)
+distancias_verticais_direita.pop(2)#P3,P5 (BAIXO,CIMA)
+print(distancias_verticais_direita)
+
+
+print(distancias_verticais)
+#1,2,3,4,5,6
+#2,3,5,6
+#if grau_horizontal >= 0:
+#vertical_direita = calcular_porcentagem_contribuicao(distancias_verticais_direita, [0, 1])
+#vertical_esquerda = calcular_porcentagem_contribuicao(distancias_verticais_esquerda, [0, 1])
+#print(vertical_direita)
+#print(vertical_esquerda)
+
+print(calcular_contribuicao_indices(distancias_verticais_direita, 0, 1))
+#print(calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1))
+
+cima = calcular_porcentagem_contribuicao(distancias_verticais, [3, 2])
+baixo = calcular_porcentagem_contribuicao(distancias_verticais, [1, 2])
+
+
+#1,2,3,4,5,6
+#2,3,5,6
+
+#se valor negativo, tendendo pra direita
+grau_horizontal = esquerda-direita
+if grau_horizontal >= 0:
+    distancias_verticais_esquerda = distancias_verticais.copy()
+    distancias_verticais_esquerda.pop(1)
+    distancias_verticais_esquerda.pop(1)
+    print(distancias_verticais_esquerda)#P2,P6 (BAIXO,CIMA)
+else:
+    distancias_verticais_direita = distancias_verticais.copy()
+    distancias_verticais_direita.pop(0)
+    distancias_verticais_direita.pop(2)  # P3,P5 (BAIXO,CIMA)
+    print(distancias_verticais_direita)
+
+#se valor negativo, tendendo pra baixo
+grau_vertical = cima-baixo
+print("Horizontal: ", grau_horizontal)
+print("Vertical: ", grau_vertical)
+
+
+
+
 
 
 # Configura o gráfico e atualiza com os dados necessários
