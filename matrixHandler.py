@@ -190,10 +190,7 @@ def calcular_contribuicao_indices(distancias, indice1, indice2):
     contribuicao_indice1 = (distancias[indice1] / soma_total) * 100
     contribuicao_indice2 = (distancias[indice2] / soma_total) * 100
 
-    return {
-        f"contribuicao_indice_{indice1}": contribuicao_indice1,
-        f"contribuicao_indice_{indice2}": contribuicao_indice2
-    }
+    return contribuicao_indice1, contribuicao_indice2
 
 
 def calcular_direcao(distancias):
@@ -218,10 +215,90 @@ def calcular_direcao(distancias):
     }
 
 
+def calcular_graus(distancias):
+    """
+    Calcula o grau horizontal e o grau vertical dos pontos com base nas porcentagens de contribuição.
+
+    Parâmetros:
+    - distancias (list): Lista de distâncias entre pontos.
+
+    Retorna:
+    - dict: Dicionário com o grau horizontal e o grau vertical.
+    """
+    # Cálculo de Esquerda e Direita
+    esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
+    direita = calcular_porcentagem_contribuicao_3(distancias, 2, 4, 3)
+    grau_horizontal = esquerda - direita
+
+    # Limpa os medidores horizontais para o cálculo vertical
+    distancias_verticais = distancias.copy()
+    distancias_verticais.pop(0)
+    distancias_verticais.pop(2)
+
+    # Define listas de distâncias verticais com base na direção horizontal
+    if grau_horizontal >= 0:
+        # Cálculo para a tendência na esquerda (P2, P6 - Baixo, Cima)
+        distancias_verticais_esquerda = distancias_verticais.copy()
+        distancias_verticais_esquerda.pop(1)
+        distancias_verticais_esquerda.pop(1)
+        baixo, cima = calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1)
+    else:
+        # Cálculo para a tendência na direita (P3, P5 - Baixo, Cima)
+        distancias_verticais_direita = distancias_verticais.copy()
+        distancias_verticais_direita.pop(0)
+        distancias_verticais_direita.pop(2)
+        baixo, cima = calcular_contribuicao_indices(distancias_verticais_direita, 0, 1)
+
+    # Calcula o grau vertical
+    grau_vertical = baixo - cima
+
+    return grau_horizontal,grau_vertical
+
+
+def calcular_direcao_paraconsistente(distancias):
+    """
+    Calcula a direção horizontal e vertical com base na lógica paraconsistente.
+
+    Parâmetros:
+    - distancias (list): Lista de distâncias entre pontos.
+
+    Retorna:
+    - str: Direção com base nos graus horizontal e vertical.
+    """
+    # Calcula os graus horizontal e vertical
+    grau_horizontal,grau_vertical = calcular_graus(distancias)
+
+    # Determina a direção horizontal
+    if -5 <= grau_horizontal <= 5:
+        direcao_horizontal = "meio"
+    elif grau_horizontal > 5:
+        direcao_horizontal = "direita"
+    else:
+        direcao_horizontal = "esquerda"
+
+    # Determina a direção vertical
+    if -6 <= grau_vertical <= 6:
+        direcao_vertical = "meio"
+    elif grau_vertical > 6:
+        direcao_vertical = "cima"
+    else:
+        direcao_vertical = "baixo"
+
+    # Análise de direção com base nas combinações de horizontal e vertical
+    if direcao_horizontal == "meio" and direcao_vertical == "meio":
+        direcao_final = "centro"
+    elif direcao_horizontal == "meio":
+        direcao_final = direcao_vertical
+    elif direcao_vertical == "meio":
+        direcao_final = direcao_horizontal
+    else:
+        direcao_final = f"{direcao_vertical}-{direcao_horizontal}"
+
+    return direcao_final
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (190,378)
+p1 = (185,381)
 # Calcula as distâncias entre p2 e o centróide p1
 distancias = calcular_distancias(p2, p1)
 print(distancias)
@@ -259,14 +336,14 @@ distancias_verticais = distancias.copy()
 distancias_verticais.pop(0)
 distancias_verticais.pop(2)
 print(distancias_verticais)
-distancias_verticais_direita = distancias_verticais.copy()
+#distancias_verticais_direita = distancias_verticais.copy()
 #distancias_verticais_esquerda = distancias_verticais.copy()
 #distancias_verticais_esquerda.pop(1)
 #distancias_verticais_esquerda.pop(1)
 #print(distancias_verticais_esquerda)#P2,P6 (BAIXO,CIMA)
-distancias_verticais_direita.pop(0)
-distancias_verticais_direita.pop(2)#P3,P5 (BAIXO,CIMA)
-print(distancias_verticais_direita)
+#distancias_verticais_direita.pop(0)
+#distancias_verticais_direita.pop(2)#P3,P5 (BAIXO,CIMA)
+#print(distancias_verticais_direita)
 
 
 print(distancias_verticais)
@@ -278,11 +355,11 @@ print(distancias_verticais)
 #print(vertical_direita)
 #print(vertical_esquerda)
 
-print(calcular_contribuicao_indices(distancias_verticais_direita, 0, 1))
+#calcular_contribuicao_indices(distancias_verticais_direita, 0, 1))
 #print(calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1))
 
-cima = calcular_porcentagem_contribuicao(distancias_verticais, [3, 2])
-baixo = calcular_porcentagem_contribuicao(distancias_verticais, [1, 2])
+#cima = calcular_porcentagem_contribuicao(distancias_verticais, [3, 2])
+#baixo = calcular_porcentagem_contribuicao(distancias_verticais, [1, 2])
 
 
 #1,2,3,4,5,6
@@ -291,23 +368,40 @@ baixo = calcular_porcentagem_contribuicao(distancias_verticais, [1, 2])
 #se valor negativo, tendendo pra direita
 grau_horizontal = esquerda-direita
 if grau_horizontal >= 0:
+    print("Entrou na Esquerda")
     distancias_verticais_esquerda = distancias_verticais.copy()
     distancias_verticais_esquerda.pop(1)
     distancias_verticais_esquerda.pop(1)
+    print(distancias_verticais_esquerda)
     print(distancias_verticais_esquerda)#P2,P6 (BAIXO,CIMA)
+    print(calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1))
+    baixo, cima = calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1)
+    grau_vertical = baixo-cima
+    #print(grau_vertical)
 else:
+    print("Entrou na direita")
     distancias_verticais_direita = distancias_verticais.copy()
     distancias_verticais_direita.pop(0)
-    distancias_verticais_direita.pop(2)  # P3,P5 (BAIXO,CIMA)
+    distancias_verticais_direita.pop(2)  #P3,P5 (BAIXO,CIMA)
     print(distancias_verticais_direita)
+    baixo, cima = calcular_contribuicao_indices(distancias_verticais_direita, 0, 1)
+   #print(baixo,cima)
+    grau_vertical = baixo-cima
 
-#se valor negativo, tendendo pra baixo
-grau_vertical = cima-baixo
+grau_horizontal, grau_vertical = calcular_graus(distancias)
+
+#grau_horizontal de -5 a 5 está no meio
+#grau horizontal quanto mais vai pro lado negativo, mais pende a esquerda
+#grau horizontal quanto mais vai pro lado positivo mais pende a direita
+
+#grau vertical de -6 a 6 está no meio,
+#grau vertical quanto mais pro lado positivo mais pra cima está
+#grau vertical quanto mais pro lado negativo mais pra baixo está
+
+#negativo é esquerda, positivo é direita. -5 a 5
 print("Horizontal: ", grau_horizontal)
+#negativo é pra baixo, positivo é pra cima. <6 pra definir cima~baixo
 print("Vertical: ", grau_vertical)
-
-
-
 
 
 
@@ -319,7 +413,7 @@ atualizar_grafico(eye_plot, iris_plot, centroid_plot, p2, p, p1)
 print("Porcentagem de contribuição de p0 e p3:", p0)
 
 print(calcular_direcao(distancias))
-
+print(calcular_direcao_paraconsistente(distancias))
 #p1, p2, p6 direita
 #p1 horizontal
 #p2 vertical baixo
