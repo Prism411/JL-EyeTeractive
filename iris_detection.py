@@ -32,7 +32,7 @@ if not cap.isOpened():
 def get_cropped_eye(frame, eye_indices, iris_indices):
     """Recorta e retorna a região do olho e da íris em um frame."""
     # Redimensiona o frame para processamento mais rápido
-    scale_factor = 0.9
+    scale_factor = 1
     small_frame = cv2.resize(frame, None, fx=scale_factor, fy=scale_factor)
     rgb_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
     mask = np.zeros_like(frame)
@@ -74,7 +74,7 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
     return None
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("video2.mp4")
+cap = cv2.VideoCapture("up.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")

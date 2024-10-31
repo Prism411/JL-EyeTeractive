@@ -12,7 +12,7 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, refine_landmarks=True)
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("video1.mp4")
+cap = cv2.VideoCapture("up.mp4")
 
 # Fator de redimensionamento para reduzir a resolução do frame
 scale_factor = 0.5
@@ -81,6 +81,8 @@ while cap.isOpened():
             for i in range(36, 42):  # Olho esquerdo
                 x, y = landmarks.part(i).x - (max(0, left_eye_x - 20)), landmarks.part(i).y - (max(0, top_y))
                 cv2.circle(roi_gray, (x, y), 2, (0, 255, 0), -1)
+                #cv2.segmentation(img)
+                print("wyllgner esteve aqui")
             for i in range(42, 48):  # Olho direito
                 x, y = landmarks.part(i).x - (max(0, left_eye_x - 20)), landmarks.part(i).y - (max(0, top_y))
                 cv2.circle(roi_gray, (x, y), 2, (0, 255, 0), -1)
