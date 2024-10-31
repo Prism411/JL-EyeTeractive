@@ -283,7 +283,7 @@ def calcular_direcao_paraconsistente(distancias):
 
     #Como o olho vai se comprimindo ao chegar nas bordas é necessaro fazer esse verificação
     valor_ajustado = calcular_valor_ajustado(grau_horizontal)
-    abs(valor_ajustado)
+    #abs(valor_ajustado)
     # Determina a direção vertical
     if -valor_ajustado <= grau_vertical <= valor_ajustado:
         direcao_vertical = "meio"
@@ -334,15 +334,15 @@ def calcular_valor_ajustado(valor):
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (193,377)
+p1 = (193,384)
 distancias = calcular_distancias(p2, p1)
-print(calcular_direcao_paraconsistente(distancias))
-cima = calcular_porcentagem_contribuicao(distancias, [5, 4])
-baixo = calcular_porcentagem_contribuicao(distancias, [1, 2])
-print(cima,baixo)
-print(baixo-cima)
-valor = baixo-cima
-print("valor ajustado:",calcular_valor_ajustado(-5))
+#print(calcular_direcao_paraconsistente(distancias))
+#cima = calcular_porcentagem_contribuicao(distancias, [5, 4])
+#baixo = calcular_porcentagem_contribuicao(distancias, [1, 2])
+#print(cima,baixo)
+#print(baixo-cima)
+#valor = baixo-cima
+#print("valor ajustado:",calcular_valor_ajustado(-5))
 
 #print(calcular_direcao_paraconsistente(distancias))
 # Calcula as distâncias entre p2 e o centróide p1
