@@ -69,7 +69,7 @@ def atualizar_grafico(eye_plot, iris_plot, centroid_plot, eye_coords, iris_coord
     centroid_plot.set_data([iris_centroid[0]], [iris_centroid[1]])
 
     plt.draw()
-    plt.pause(200)  # Pausa para simular vídeo em tempo real
+    plt.pause(0.01)  # Pausa para simular vídeo em tempo real
 
 
 def calcular_porcentagem_contribuicao(distancias, indices):
@@ -335,7 +335,7 @@ def calcular_direcao_paraconsistente(grau_horizontal, grau_vertical):
     # Define as zonas de intensidade para vertical
     if -valor_ajustado <= grau_vertical <= valor_ajustado:
         direcao_vertical = "meio"
-    elif grau_vertical > 7.5:
+    elif grau_vertical > 1.0:
         direcao_vertical = "cima-intensa"
     elif grau_vertical > 6.5:
         direcao_vertical = "cima-leve"
@@ -356,8 +356,6 @@ def calcular_direcao_paraconsistente(grau_horizontal, grau_vertical):
         direcao_final = f"{direcao_vertical}-{direcao_horizontal}"
 
     return direcao_final
-
-
 
 def calcular_valor_ajustado(valor):
     """
@@ -392,11 +390,11 @@ def calcular_valor_ajustado(valor):
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (201,380)
-distancias = calcular_distancias(p2, p1)
-print(calcular_direcao_consistente(distancias))
-grau_horizontal, grau_vertical = calcular_graus(distancias)
-print(calcular_direcao_paraconsistente(grau_horizontal, grau_vertical))
+#p1 = (201,380)
+#distancias = calcular_distancias(p2, p1)
+#print(calcular_direcao_consistente(distancias))
+#grau_horizontal, grau_vertical = calcular_graus(distancias)
+#print(calcular_direcao_paraconsistente(grau_horizontal, grau_vertical))
 
 #cima = calcular_porcentagem_contribuicao(distancias, [5, 4])
 #baixo = calcular_porcentagem_contribuicao(distancias, [1, 2])
@@ -411,7 +409,7 @@ print(calcular_direcao_paraconsistente(grau_horizontal, grau_vertical))
 
 # Calcula a porcentagem de contribuição para descobrir se ele está no meio
 #se distancia ente p1 e p4 concentrada for mais de 50% entre os pontos está no centro
-p0 = calcular_porcentagem_contribuicao(distancias, [0, 3])
+#p0 = calcular_porcentagem_contribuicao(distancias, [0, 3])
 #print(p0)
 #print("percentaul de diferença:", calcular_contribuicao_indices(distancias))
 #se for mais de 50% ele não tenta nem descobrir se ta indo pra direita ou esquerda e sim vai
@@ -433,12 +431,12 @@ p0 = calcular_porcentagem_contribuicao(distancias, [0, 3])
 #Calculando Porcentagem pra descobrir grau de Cima~Baixo
 #Se a diferença entre ambos for mais que 5% está no centro.
 
-esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
-direita = calcular_porcentagem_contribuicao_3(distancias, 2, 4, 3)
+#esquerda = calcular_porcentagem_contribuicao_3(distancias, 0, 1, 5)
+#direita = calcular_porcentagem_contribuicao_3(distancias, 2, 4, 3)
 # Limpa os medidores horizontais e calcula a direção vertical
-distancias_verticais = distancias.copy()
-distancias_verticais.pop(0)
-distancias_verticais.pop(2)
+#distancias_verticais = distancias.copy()
+#distancias_verticais.pop(0)
+#distancias_verticais.pop(2)
 #print(distancias_verticais)
 #distancias_verticais_direita = distancias_verticais.copy()
 #distancias_verticais_esquerda = distancias_verticais.copy()
@@ -493,7 +491,7 @@ distancias_verticais.pop(2)
 #    grau_vertical = baixo-cima
 
 #print(grau_vertical)
-grau_horizontal, grau_vertical = calcular_graus(distancias)
+#grau_horizontal, grau_vertical = calcular_graus(distancias)
 
 #grau_horizontal de -5 a 5 está no meio
 #grau horizontal quanto mais vai pro lado negativo, mais pende a esquerda
@@ -504,20 +502,20 @@ grau_horizontal, grau_vertical = calcular_graus(distancias)
 #grau vertical quanto mais pro lado negativo mais pra baixo está
 
 #negativo é esquerda, positivo é direita. -5 a 5
-print("Horizontal: ", grau_horizontal)
+#print("Horizontal: ", grau_horizontal)
 #negativo é pra baixo, positivo é pra cima. <6 pra definir cima~baixo
-print("Vertical: ", grau_vertical)
+#print("Vertical: ", grau_vertical)
 
 
 
 # Configura o gráfico e atualiza com os dados necessários
-fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
-atualizar_grafico(eye_plot, iris_plot, centroid_plot, p2, p, p1)
+#fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
+#atualizar_grafico(eye_plot, iris_plot, centroid_plot, p2, p, p1)
 
 # Finalmente, imprime ou utiliza o valor calculado p0 conforme necessário
-print("Porcentagem de contribuição de p0 e p3:", p0)
+#print("Porcentagem de contribuição de p0 e p3:", p0)
 
-print(calcular_direcao(distancias))
+#print(calcular_direcao(distancias))
 #p1, p2, p6 direita
 #p1 horizontal
 #p2 vertical baixo

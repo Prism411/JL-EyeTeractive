@@ -3,7 +3,8 @@ import mediapipe as mp
 import numpy as np
 from matplotlib import pyplot as plt
 
-from matrixHandler import calcular_centroide, atualizar_grafico, configurar_grafico
+from matrixHandler import calcular_centroide, atualizar_grafico, configurar_grafico, calcular_distancias, \
+    calcular_graus, calcular_direcao_paraconsistente
 
 # Inicializa o módulo de Face Mesh do MediaPipe
 mp_face_mesh = mp.solutions.face_mesh
@@ -54,6 +55,10 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
                 iris_coordinates.append((x, y))
 
             centroid = calcular_centroide(iris_coordinates)
+            distancias = calcular_distancias(eye_coordinates, centroid)
+            grau_horizontal, grau_vertical = calcular_graus(distancias)
+            print(grau_vertical)
+            print(calcular_direcao_paraconsistente(grau_horizontal, grau_vertical))
             cv2.fillPoly(mask, [np.array(eye_coordinates)], (255, 255, 255))
 
             for (x, y) in iris_coordinates:
@@ -61,14 +66,15 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
                 cv2.circle(mask, calcular_centroide(iris_coordinates), 2, (0, 0, 255), 5)
 
             cropped_eye = cv2.bitwise_and(frame, mask)
-            print(eye_coordinates)
-            print(iris_coordinates)
+            #print(eye_coordinates)
+            #print(iris_coordinates)
+
             return cropped_eye, eye_coordinates, iris_coordinates, centroid
 
     return None
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("video6.mp4")
+cap = cv2.VideoCapture("video2.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")
@@ -80,9 +86,9 @@ while cap.isOpened():
         break
 
     # Obtém a área recortada do olho direito e da íris
-    #cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
+    cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, left_eye_indices, left_iris_indices)
     # Obtém a área recortada do olho direito e da íris
-    cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
+    #cropped_eye, eye_coords, iris_coords, iris_centroid = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
 
     #cropped_eye = get_cropped_eye(frame, right_eye_indices, right_iris_indices)
     if cropped_eye is not None:
