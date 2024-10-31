@@ -236,19 +236,21 @@ def calcular_graus(distancias):
     distancias_verticais.pop(2)
 
     # Define listas de distâncias verticais com base na direção horizontal
-    if grau_horizontal >= 0:
+    if grau_horizontal <= 0:
         # Cálculo para a tendência na esquerda (P2, P6 - Baixo, Cima)
+        print("Entrou na esquerda")
         distancias_verticais_esquerda = distancias_verticais.copy()
         distancias_verticais_esquerda.pop(1)
         distancias_verticais_esquerda.pop(1)
         baixo, cima = calcular_contribuicao_indices(distancias_verticais_esquerda, 0, 1)
     else:
         # Cálculo para a tendência na direita (P3, P5 - Baixo, Cima)
+        print("Entrou na Direita")
         distancias_verticais_direita = distancias_verticais.copy()
         distancias_verticais_direita.pop(0)
         distancias_verticais_direita.pop(2)
         baixo, cima = calcular_contribuicao_indices(distancias_verticais_direita, 0, 1)
-
+        print(baixo,cima)
     # Calcula o grau vertical
     grau_vertical = baixo - cima
 
@@ -298,9 +300,10 @@ def calcular_direcao_paraconsistente(distancias):
 
 # Supondo que calcular_centroide(p) retorna as coordenadas do centróide
 #p1 = calcular_centroide(p)
-p1 = (185,381)
-# Calcula as distâncias entre p2 e o centróide p1
+p1 = (185,383)
 distancias = calcular_distancias(p2, p1)
+print(calcular_direcao_paraconsistente(distancias))
+# Calcula as distâncias entre p2 e o centróide p1
 print(distancias)
 
 # Calcula a porcentagem de contribuição para descobrir se ele está no meio
@@ -365,7 +368,7 @@ print(distancias_verticais)
 #1,2,3,4,5,6
 #2,3,5,6
 
-#se valor negativo, tendendo pra direita
+#se valor negativo, tendendo pra esquerda
 grau_horizontal = esquerda-direita
 if grau_horizontal >= 0:
     print("Entrou na Esquerda")
@@ -388,6 +391,7 @@ else:
    #print(baixo,cima)
     grau_vertical = baixo-cima
 
+print(grau_vertical)
 grau_horizontal, grau_vertical = calcular_graus(distancias)
 
 #grau_horizontal de -5 a 5 está no meio
