@@ -2,7 +2,7 @@ import cv2
 import dlib
 import mediapipe as mp
 import time
-
+#(469, 473)
 # Inicializa o detector de face do dlib e o preditor de marcos faciais
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -76,6 +76,7 @@ while cap.isOpened():
                         x = int(landmark.x * frame.shape[1]) - max(0, left_eye_x - 20)
                         y = int(landmark.y * frame.shape[0]) - max(0, top_y)
                         cv2.circle(roi_gray, (x, y), 2, (255, 0, 0), -1)
+                        print(x,y)
 
             # Desenha os pontos dos olhos com o dlib
             for i in range(36, 42):  # Olho esquerdo

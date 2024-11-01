@@ -66,8 +66,8 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
                 cv2.circle(mask, calcular_centroide(iris_coordinates), 2, (0, 0, 255), 5)
 
             cropped_eye = cv2.bitwise_and(frame, mask)
-            #print(eye_coordinates)
-            #print(iris_coordinates)
+            print(eye_coordinates)
+            print(iris_coordinates)
 
             return cropped_eye, eye_coordinates, iris_coordinates, centroid
 
