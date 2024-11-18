@@ -67,9 +67,10 @@ def process_eye(image):
             cv2.imshow("Recorte do Olho Esquerdo com Contornos", contour_image)
 
     return image
-
+#
+#cap = cv2.VideoCapture("videos/video1.mp4")
 # Captura de vídeo
-cap = cv2.VideoCapture("video1.mp4")
+cap = cv2.VideoCapture("videos/video1.mp4")
 
 while cap.isOpened():
     ret, frame = cap.read()

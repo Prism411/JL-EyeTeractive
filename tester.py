@@ -62,5 +62,5 @@ def process_eye(image):
             cv2.destroyAllWindows()
 
 # Carregar a imagem
-#image = cv2.imread("img_1.png")
-#process_eye(image)
+image = cv2.imread("photos/img_1.png")
+process_eye(image)

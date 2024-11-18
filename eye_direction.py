@@ -21,7 +21,7 @@ right_iris_indices = [474, 475, 476, 477]  # Contorno da íris do olho esquerdo
 fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("videos/video2.mp4")
+cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")
@@ -52,6 +52,7 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
                 iris_coordinates.append((x, y))
 
             centroid = calcular_centroide(iris_coordinates)
+            #centroid = gaze.pupil_left_coords()
             distancias = calcular_distancias(eye_coordinates, centroid)
             grau_horizontal, grau_vertical = calcular_graus(distancias)
             print(grau_vertical)
@@ -63,8 +64,8 @@ def get_cropped_eye(frame, eye_indices, iris_indices):
                 cv2.circle(mask, calcular_centroide(iris_coordinates), 2, (0, 0, 255), 5)
 
             cropped_eye = cv2.bitwise_and(frame, mask)
-            print(eye_coordinates)
-            print(iris_coordinates)
+            #print(eye_coordinates)
+            #print(iris_coordinates)
 
             return cropped_eye, eye_coordinates, iris_coordinates, centroid
 
