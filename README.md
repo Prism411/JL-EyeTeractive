@@ -47,18 +47,26 @@ Traditional gaze-tracking solutions often require proprietary hardware that is e
 
 - **Calculating the Horizontal Axis**:
   ![Calculation of Horizontal Axis](images/CalculoGrau.jpeg)
+
+
   This image illustrates the calculations used to determine the horizontal displacement of the iris.
 
 - **Eye Position Interpretation**:
   ![Eye Position Graph](images/EyePosition.png)
+
+  
   This graph visualizes the processed interpretation of the eye's position.
 
 - **Adapted Paraconsistent Logic**:
   ![Adapted Paraconsistent Logic](images/paraconsistenteAdaptado.jpeg)
+
+  
   This chart represents the application of adapted paraconsistent logic to interpret gaze directions.
 
 - **Iris Mask Extraction**:
   ![Iris Mask Extraction](images/Olho_Separado_Mascara.png)
+
+  
   This image shows the segmented mask of the eye region extracted using the Dlib library.
 
 ## Applications
