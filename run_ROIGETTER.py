@@ -21,7 +21,7 @@ right_iris_indices = [474, 475, 476, 477]  # Contorno da íris do olho esquerdo
 fig, ax, eye_plot, iris_plot, centroid_plot = configurar_grafico()
 
 # Carrega o vídeo
-cap = cv2.VideoCapture("videos/video2.mp4")
+cap = cv2.VideoCapture("videos/video6.mp4")
 
 if not cap.isOpened():
     print("Erro ao abrir o vídeo.")

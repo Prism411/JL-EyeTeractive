@@ -7,7 +7,6 @@
     <list default="true" id="fa378258-e0fd-462e-b301-6900c6af5841" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../../../Estudos/Tarefas/IA/.idea/IA.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../../Estudos/Tarefas/IA/Visage-Track-Simulator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/eye_direction.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../model/.idea/model.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../IDW/IDW_API/pythonProject/.idea/pythonProject.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../IDW/IDW_API/pythonProject1/.idea/pythonProject1.iml" afterDir="false" />
@@ -21,29 +20,10 @@
       <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/JL-EyeTeractive.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/JL-EyeTeractive.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/iris_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/iris_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mouse_controlled.py" beforeDir="false" afterPath="$PROJECT_DIR$/mouse_controlled.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/print_8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/tester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tester_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/tester_video.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/up.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video1.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video2.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video3.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video4.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/video5.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_ROIGETTER.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_ROIGETTER.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../database/databaseManager.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../analysis_options.yaml" beforeDir="false" />
@@ -283,27 +263,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.audiotester.executor": "Run",
-    "Python.camera_printer.executor": "Run",
-    "Python.eyeSeg.executor": "Run",
-    "Python.eye_direction.executor": "Run",
-    "Python.iris_detection.executor": "Run",
-    "Python.iris_detector.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.matrixHandler.executor": "Run",
-    "Python.mouse_controlled.executor": "Run",
-    "Python.setup.executor": "Run",
-    "Python.tester.executor": "Run",
-    "Python.tester_video.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/T-GAMER/Desktop/Projetos/EyeTracker/ROI_getter",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.audiotester.executor&quot;: &quot;Run&quot;,
+    &quot;Python.camera_printer.executor&quot;: &quot;Run&quot;,
+    &quot;Python.eyeSeg.executor&quot;: &quot;Run&quot;,
+    &quot;Python.eye_direction.executor&quot;: &quot;Run&quot;,
+    &quot;Python.iris_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python.iris_detector.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.matrixHandler.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mouse_controlled.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_ROIGETTER.executor&quot;: &quot;Run&quot;,
+    &quot;Python.setup.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tester.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tester_video.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/T-GAMER/Desktop/Projetos/EyeTracker/ROI_getter&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\T-GAMER\Desktop\Projetos\EyeTracker\ROI_getter" />
