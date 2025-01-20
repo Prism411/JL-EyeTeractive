@@ -102,7 +102,6 @@ Traditional gaze-tracking solutions often require proprietary hardware that is e
 
 ## Team
 - Jáder Louis de Souza Gonçalves
-- Samih Santos de Oliveira
 
 ### Advisor
 - Prof. Dr. Lucas Marques da Cunha
