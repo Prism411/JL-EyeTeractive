@@ -1,0 +1,18 @@
+# Ambiente
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.idea/
+.vscode/
+
+# Pesos e ativos baixados por scripts/baixar_modelos.sh
+models/
+perfis/
+
+# Dados — a base não é distribuível; ver README
+data/
+
+# Saídas
+saidas/
+*.log

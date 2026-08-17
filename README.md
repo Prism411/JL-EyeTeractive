@@ -1,109 +1,223 @@
-# EyeTeractive: Paraconsistent Logic for Gaze-Based Interfaces
+# EyeTeractive
 
-## Overview
+Rastreamento ocular assistivo de baixo custo com webcam comum. Traduz a
+direção do olhar em comandos, sem hardware dedicado.
 
-The **EyeTeractive** project aims to develop an accessible and efficient gaze-tracking system by leveraging **paraconsistent logic** and **artificial intelligence**. This system translates eye movements into computational commands, providing inclusive solutions for users with physical or motor limitations. By utilizing cost-effective hardware like standard webcams and robust algorithms, the project overcomes the challenges of traditional gaze-tracking technologies.
+Sistema apresentado no **INTERACT 2025** (20th IFIP TC13) e no **IHC 2025**
+(*EyeTeractive: Sistema Multiplataforma de Rastreamento Ocular para Interação
+Assistiva de Baixo Custo*), Universidade Federal de Rondônia.
 
-## Key Features
+## O que o sistema faz — e o que não faz
 
-- **Paraconsistent Logic**: Handles uncertainties and inconsistencies in gaze-tracking data caused by variable lighting and image quality.
-- **AI-Powered Processing**: Uses the ResNet architecture and Dlib library for accurate iris detection and gaze direction estimation.
-- **Accessibility**: Eliminates the need for expensive hardware like Tobii Eye Trackers, enabling compatibility with low-cost devices.
-- **Real-Time Interaction**: Processes and maps gaze movements into actionable commands in real time.
+O EyeTeractive **classifica a direção do olhar em nove categorias discretas**:
+centro, cima, baixo, esquerda, direita e as quatro diagonais. É o suficiente
+para comandar uma interface — mover um cursor, navegar um menu, acionar uma
+seleção.
 
-## Motivation
+Ele **não é um estimador de ponto de olhar**. Não produz coordenada na tela,
+não segmenta fixações e sacadas, não faz pupilometria. Para estudos de
+psicologia experimental que dependem dessas medidas, é o instrumento errado —
+a diferença não é de precisão, é de natureza da saída.
 
-Traditional gaze-tracking solutions often require proprietary hardware that is expensive and not universally accessible. The **EyeTeractive** project addresses these issues by:
+## Arquitetura
 
-1. Reducing dependency on specialized hardware.
-2. Enhancing robustness in challenging environments (e.g., variable lighting).
-3. Promoting digital inclusion by making the technology accessible to diverse user groups.
+Cada eixo é decidido pela fonte que consegue medi-lo:
 
-## Objectives
+| eixo | quem decide | por quê |
+|---|---|---|
+| **vertical** (cima/centro/baixo) | **CNN** ResNet-101 | a pálpebra acompanha o olhar vertical e comprime a excursão da íris; a geometria não tem resolução aqui |
+| **horizontal** (esquerda/centro/direita) | **geometria** da íris | excursão ampla, interpretável, e roda sem GPU |
+| **arbitragem** | **lógica paraconsistente** Eτ | funde as fontes e recusa decidir sob contradição |
 
-### General Objective
-- Develop an efficient model to translate gaze positions into computational commands using paraconsistent logic and artificial intelligence.
+As nove direções são o produto cartesiano dos dois eixos ternários.
 
-### Specific Objectives
-1. Validate the model's performance under adverse conditions, such as lighting and viewing angles.
-2. Ensure scalability and applicability in low-cost devices.
+O eixo horizontal depende apenas dos landmarks do MediaPipe, não do modelo
+treinado — o que o torna independente da base usada no treino.
 
-## Methodology
+### Nove direções a partir de cinco classes
 
-1. **Data Collection**:
-   - 7,000+ frames were collected from 27 videos of volunteers at the Federal University of Rondônia.
-   - Participants followed a moving circle on a screen to capture gaze data.
+A rede prevê `center`, `down`, `left`, `right`, `up`. Cada classe é um par
+*(horizontal, vertical)* com um dos eixos no centro, então marginalizar o
+softmax por eixo dá evidência independente para cada um:
 
-2. **Model Development**:
-   - Utilized the **Dlib library** for facial landmarks and iris region detection.
-   - Trained the model using the **ResNet architecture** for robust classification and detection tasks.
-   - Avoided data augmentation to ensure real-world scenario validity.
+```
+P(vertical = cima)   = p_up
+P(vertical = baixo)  = p_down
+P(vertical = centro) = p_center + p_left + p_right
 
-3. **Paraconsistent Logic Integration**:
-   - Applied paraconsistent logic to process and translate gaze data, addressing inconsistencies effectively.
-   - Calculated precise gaze directions using horizontal and vertical displacement metrics.
+P(horizontal = esquerda) = p_left
+P(horizontal = direita)  = p_right
+P(horizontal = centro)   = p_center + p_up + p_down
+```
 
-## Visualization
+Um olhar diagonal reparte a massa entre `up` e `left`; nas marginais isso vira
+evidência simultânea nos dois eixos, e a camada paraconsistente compõe
+`cima-esquerda`. Sem classes novas e sem retreino.
 
-- **Calculating the Horizontal Axis**:
+### O papel da lógica paraconsistente
 
-  ![Calculation of Horizontal Axis](images/CalculoGrau.jpeg)
+Cada eixo vira uma proposição bipolar anotada `(μ, λ)` — para o vertical, *"o
+olhar está para cima"*, com `μ` vindo da evidência de cima e `λ` da de baixo.
+Delas derivam o **grau de certeza** `Gc = μ − λ`, o **grau de contradição**
+`Gct = μ + λ − 1` e o **grau de certeza real** `Gcr`, que desconta a certeza
+pela contradição.
 
+A decisão sai de `Gcr`, não de `Gc`. Quando a geometria aponta um lado e a
+rede aponta o outro, `Gcr` colapsa e o eixo cai em "centro": o sistema
+**recusa** o comando em vez de escolher um dos dois ou oscilar entre eles.
 
-  This image illustrates the calculations used to determine the horizontal displacement of the iris.
+A distinção entre *inconsistência* (`⊤`, fontes conflitando) e
+*paracompletude* (`⊥`, ausência de evidência) também é reportada, porque
+pedem respostas diferentes — a primeira sugere um quadro ruim, a segunda um
+olhar genuinamente centrado.
 
-- **Eye Position Interpretation**:
-  
-  ![Eye Position Graph](images/EyePosition.png)
+## Instalação
 
-  
-  This graph visualizes the processed interpretation of the eye's position.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+./scripts/baixar_modelos.sh
+```
 
-- **Adapted Paraconsistent Logic**:
+Python 3.10+. Com GPU NVIDIA a inferência usa CUDA automaticamente; sem ela,
+roda em CPU.
 
-  ![Adapted Paraconsistent Logic](images/paraconsistenteAdaptado.jpeg)
+Requer **MediaPipe 1.0+** (API Tasks). Os pesos treinados não acompanham o
+repositório — ver *Sobre a base de dados*.
 
-  
-  This chart represents the application of adapted paraconsistent logic to interpret gaze directions.
+## Uso
 
-- **Iris Mask Extraction**:
+```bash
+# Visualização ao vivo, com as evidências de cada eixo sobrepostas
+python scripts/webcam.py --camera 0
 
-  ![Iris Mask Extraction](images/Olho_Separado_Mascara.png)
+# Servidor de inferência (a GPU fica aqui; o cliente só captura e exibe)
+python scripts/servidor.py --porta 5000
+python scripts/cliente.py --host 192.168.0.10 --fonte 0
 
-  
-  This image shows the segmented mask of the eye region extracted using the Dlib library.
+# Calibração por usuário
+python scripts/calibrar.py --fonte webcam --usuario nome
 
-## Applications
+# Treino
+python scripts/treinar.py --dataset data/dataset --epocas 35 --amp --limite-gpu 0.45
+```
 
-- Biometric analysis.
-- Eye-based interface control for individuals with motor impairments.
-- Behavioral studies using gaze tracking.
+Como biblioteca:
 
-## Dependencies
+```python
+import cv2
+from eyeteractive.pipeline import PipelineOlhar
 
-- Python 3.8+
-- Dlib
-- OpenCV
-- TensorFlow or PyTorch (for ResNet implementation)
+captura = cv2.VideoCapture(0)
+with PipelineOlhar() as pipeline:
+    while True:
+        ok, quadro = captura.read()
+        if not ok:
+            break
+        analise = pipeline.processar(quadro, timestamp_ms=...)
+        if analise.rosto_detectado:
+            print(analise.resultado.resumo())
+            # cima   conf=0.93 V[cima Gcr=+0.93 verdadeiro] H[centro Gcr=+0.00 indeterminado]
+```
 
-## Getting Started
+Todo script que usa GPU aceita `--limite-gpu`, a fração de VRAM que o processo
+pode reservar, para conviver com outros trabalhos na mesma placa.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/user/EyeTeractive.git
+## Calibração por usuário
 
-2. Install Dependencies:
-   ```bash
-   pip install -r requirements.txt
+A excursão do grau horizontal depende do formato do olho e da distância à
+câmera, e o equilíbrio entre sensibilidade e estabilidade depende de quanto o
+usuário consegue fixar o olhar. `scripts/calibrar.py` roda uma sessão curta
+com cinco alvos e ajusta limiares e escalas por busca em grade — sem retreino
+da rede, só a camada de decisão.
 
-3. Run the application:
-   ```bash
-   python main.py
+```python
+from eyeteractive.calibracao import carregar_perfil
+from eyeteractive.pipeline import PipelineOlhar
 
-## Team
-- Jáder Louis de Souza Gonçalves
+pipeline = PipelineOlhar(config=carregar_perfil("perfis/nome.json"))
+```
 
-### Advisor
-- Prof. Dr. Lucas Marques da Cunha
+Sob empate, a calibração escolhe o limiar mais alto. Em uso assistivo um
+comando errado custa mais caro que um comando ausente, e o efeito medido é
+esse: os erros deixam de ser decisões equivocadas e passam a ser omissões.
 
+## Estrutura
 
+```
+src/eyeteractive/
+  paraconsistent.py   álgebra Eτ: anotações, Gc, Gct, Gcr, operadores
+  geometry.py         centroide da íris, graus por eixo, abertura ocular (EAR)
+  cnn.py              ResNet-101 e marginalização do softmax por eixo
+  landmarks.py        FaceLandmarker: contorno, íris e recorte do olho
+  fusion.py           combina as fontes nas nove direções, com histerese
+  calibracao.py       ajuste dos parâmetros de decisão por usuário
+  pipeline.py         quadro → direção, de ponta a ponta
+  io/                 protocolo de rede e servidor de inferência
+scripts/              treino, avaliação, calibração, rotulagem, servidor
+tests/                65 testes, sem dependência de GPU ou de pesos
+```
+
+## Protocolo de rede
+
+O desenho é *server-side*: o dispositivo cliente captura e exibe, a inferência
+fica no servidor.
+
+```
+cliente → servidor : uint32 big-endian (tamanho) + bytes JPEG
+servidor → cliente : uint32 big-endian (tamanho) + JSON UTF-8
+```
+
+A resposta carrega direção, código do comando, confiança e os graus de certeza
+e contradição de cada eixo, para o cliente aplicar a própria política de
+aceitação. Códigos `0..4` para as direções cardeais, `5..8` para as diagonais;
+`--apenas-cardeais` projeta as diagonais de volta em `1..4`.
+
+## Testes
+
+```bash
+pytest
+```
+
+Cobrem a álgebra paraconsistente, a geometria e a fusão. Não exigem GPU nem os
+pesos treinados.
+
+## Sobre a base de dados
+
+**A base não é distribuída, e não pode ser.** As gravações foram feitas com
+colaboradores que assinaram termo de autorização de imagem
+(`docs/`) autorizando o uso **exclusivamente para treinamento do sistema, no
+âmbito acadêmico** — o que não abrange redistribuição. O material original
+tampouco existe mais.
+
+Consequências para quem for usar o repositório:
+
+- Os pesos treinados não acompanham o código. `scripts/treinar.py` treina a
+  partir de uma base própria, organizada em `data/dataset/{train,val}/<classe>`.
+- O eixo **horizontal** funciona sem modelo treinado: depende só dos landmarks
+  do MediaPipe. `PipelineOlhar(usar_cnn=False)` já opera nesse modo.
+
+## Escopo da validação
+
+Os resultados publicados vêm de gravações de **um único participante adulto**.
+Sob divisão por sessão — treino e validação em gravações distintas — o
+desempenho fica em torno de 98% para esse participante.
+
+Isso é coerente com o desenho do sistema, que é **assistivo e personalizado**:
+calibra por usuário e opera para uma pessoa por vez. Mas delimita o que se
+pode afirmar:
+
+- **A transferência para outra pessoa não foi medida.** Em especial para
+  crianças e adolescentes, cuja anatomia ocular e controle oculomotor não são
+  extrapoláveis a partir de adultos.
+- Não há classe para **olho fechado**; durante uma piscada a rede ainda emite
+  uma distribuição sobre direções. A confiança derivada da abertura ocular
+  (EAR) atenua isso no eixo vertical, mas não o resolve.
+- O sistema **não compensa pose da cabeça**. Movimento de cabeça durante o uso
+  degrada a leitura.
+
+## Equipe
+
+- Jáder Louis de Souza Gonçalves — UNIR
+- Prof. Dr. Lucas Marques da Cunha — UNIR (orientação)

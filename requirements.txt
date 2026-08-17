@@ -1,0 +1,13 @@
+# Núcleo de inferência
+torch>=2.6
+torchvision>=0.21
+mediapipe>=1.0        # API Tasks; a antiga mediapipe.solutions foi removida
+opencv-python>=4.10
+numpy>=2.0
+pillow>=10.0
+
+# Treino e avaliação
+scikit-learn>=1.5
+
+# Testes
+pytest>=8.0
